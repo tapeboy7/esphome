@@ -148,6 +148,13 @@ class LightStateTrigger : public Trigger<> {
   }
 };
 
+class LightTransitionTrigger : public Trigger<uint32_t> {
+ public:
+  LightTransitionTrigger(LightState *a_light) {
+    a_light->add_new_transition_start_callback([this](uint32_t transition_length) { this->trigger(transition_length); });
+  }
+};
+
 // This is slightly ugly, but we can't log in headers, and can't make this a static method on AddressableSet
 // due to the template. It's just a temporary warning anyway.
 void addressableset_warn_about_scale(const char *field);

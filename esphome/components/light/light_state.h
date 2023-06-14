@@ -101,6 +101,13 @@ class LightState : public EntityBase, public Component {
    */
   void add_new_target_state_reached_callback(std::function<void()> &&send_callback);
 
+  /**
+   * The callback is called upon the start of a transition.
+   *
+   * @param send_callback
+   */
+  void add_new_transition_start_callback(std::function<void(uint32_t)> &&send_callback);
+
   /// Set the default transition length, i.e. the transition length when no transition is provided.
   void set_default_transition_length(uint32_t default_transition_length);
   uint32_t get_default_transition_length() const;
@@ -192,6 +199,11 @@ class LightState : public EntityBase, public Component {
    * This should be called once the state of current_values changed and equals the state of remote_values
    */
   CallbackManager<void()> target_state_reached_callback_{};
+
+  /** Callback to call when a transition starts
+   * This should be called upon the start of a transition
+   */
+  CallbackManager<void(uint32_t)> transition_start_callback_{};
 
   /// Default transition length for all transitions in ms.
   uint32_t default_transition_length_{};

@@ -162,6 +162,9 @@ void LightState::add_new_remote_values_callback(std::function<void()> &&send_cal
 void LightState::add_new_target_state_reached_callback(std::function<void()> &&send_callback) {
   this->target_state_reached_callback_.add(std::move(send_callback));
 }
+void LightState::add_new_transition_start_callback(std::function<void(uint32_t)> &&send_callback) {
+  this->transition_start_callback_.add(std::move(send_callback));
+}
 
 void LightState::set_default_transition_length(uint32_t default_transition_length) {
   this->default_transition_length_ = default_transition_length;
@@ -241,6 +244,7 @@ void LightState::stop_effect_() {
 void LightState::start_transition_(const LightColorValues &target, uint32_t length, bool set_remote_values) {
   this->transformer_ = this->output_->create_default_transition();
   this->transformer_->setup(this->current_values, target, length);
+  this->transition_start_callback_.call(length);
 
   if (set_remote_values) {
     this->remote_values = target;
